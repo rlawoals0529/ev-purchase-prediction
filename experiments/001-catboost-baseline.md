@@ -6,25 +6,29 @@ Question:
 What score do we get from a strong tabular baseline before feature engineering or ensembling?
 
 Change:
-This is the control. Five-fold stratified CV, raw competition features, `id` excluded from the
-model, categorical columns passed directly to CatBoost, and early stopping on each validation
-fold.
+This was the original control: five-fold stratified CV, raw competition features, `id` excluded
+from the model, categorical columns passed directly to CatBoost, and early stopping on each
+validation fold.
 
 Validation:
-Fold AUCs: pending
-Mean AUC: pending
-Std: pending
-Runtime: pending
+Fold AUCs: not produced
+Mean AUC: not produced
+Std: not produced
+Runtime: stopped after 240 seconds without completing the first fold in this environment
 
 Kaggle:
-Public AUC: pending
+Public AUC: not submitted
 
 What happened:
-Not run yet. This file exists before the result so the experiment is not rewritten around the
-number we get.
+The model was too slow for the iteration loop I want here. The dataset has 668,665 training rows,
+and waiting several minutes before seeing even one fold makes every later comparison expensive.
+There is no score to compare because I stopped the run rather than change the configuration halfway
+through and still call it the same experiment.
+
+The exact attempt is kept at [`scripts/archive/catboost_attempt.py`](../scripts/archive/catboost_attempt.py).
 
 Decision:
-pending
+revert as the working baseline. Keep the failed run in the history.
 
 Next:
-Run the baseline unchanged. Inspect fold spread before changing features.
+Try the same raw features with a faster tree implementation and keep the validation split fixed.
