@@ -23,12 +23,13 @@ Mean AUC: +0.000090
 OOF AUC: +0.000086
 
 Kaggle:
-Public AUC: pending
+Public AUC: **0.94168**
+Submission: `ev_purchase_submission_v2.csv`
 
 What happened:
-All three folds improved, although the gain is small. The extra runtime is about eleven seconds for
-the full CV run, which is cheap enough to keep. This is a better trade than adding another model or
-an ensemble for a similarly small local gain.
+All three folds improved, although the gain is small. The public score landed only 0.000079 below
+the OOF AUC, which is close enough that I trust this split as a useful local reference rather than
+changing the validation scheme around one leaderboard result.
 
 I tested blending this model with the 31-leaf run and with a histogram gradient boosting model.
 The best three-model OOF blend reached 0.941813, only about 0.000054 above this model by itself.
@@ -36,7 +37,8 @@ That number was selected on the same OOF predictions, so I am not treating it as
 extra complexity will generalize.
 
 Decision:
-keep. This is the current submission candidate.
+keep as the measured baseline. It is no longer the best local candidate.
 
 Next:
-Submit this unchanged and record the public AUC before doing any leaderboard-driven work.
+Use the same folds to test whether more resolution on income and an additive tree structure can
+capture signal the small-tree baseline is smoothing away.
