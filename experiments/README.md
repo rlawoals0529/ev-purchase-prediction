@@ -5,12 +5,12 @@ One file per change that was worth measuring.
 I am keeping this deliberately small. The useful part of an experiment is the comparison, not a
 page of narrative written after the result is known.
 
-Use the next number in sequence:
+Current sequence:
 
 ```text
-001-catboost-baseline.md
-002-drop-id-like-columns.md
-003-rank-average.md
+001-catboost-baseline.md    runtime failure, kept on purpose
+002-lightgbm-baseline.md    first measured control
+003-smaller-trees.md        current submission candidate
 ```
 
 Each record should answer:
