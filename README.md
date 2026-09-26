@@ -14,19 +14,29 @@ one public number. Every model, feature change and ensemble goes through the sam
 scheme first. If CV and the leaderboard disagree, that disagreement is something to investigate,
 not something to hide.
 
-## Current state
+## Current baseline
 
-The repository is set up before the first baseline run. I am intentionally not putting a score
-here until it has been reproduced from a committed pipeline.
+[`scripts/train_baseline.py`](scripts/train_baseline.py) is the first control: five-fold stratified
+cross-validation with CatBoost, raw competition features, `id` excluded from training, categorical
+columns passed directly to the model, and early stopping inside each fold.
 
-The first pass is deliberately boring:
+The script writes the fold scores to `results/catboost_baseline.json` and the averaged test
+prediction to `submissions/catboost_baseline.csv`. I am intentionally not putting a score in this
+README until that exact committed pipeline has produced it.
 
-1. load the competition data without changing row order or ids;
-2. establish a stratified cross-validation baseline;
-3. log fold-level ROC AUC, not only the mean;
-4. train one strong tabular model with minimal feature work;
-5. generate a submission from exactly that pipeline;
-6. only then start feature and ensemble experiments.
+## Run it
+
+Put Kaggle's `train.csv` and `test.csv` under `data/`, then:
+
+```bash
+python -m venv .venv
+# activate the environment for your shell
+pip install -r requirements.txt
+python scripts/train_baseline.py
+```
+
+The script checks that train and test use the same feature columns before fitting anything. It
+prints every fold AUC and the mean/std rather than only the final average.
 
 ## Experiments
 
@@ -34,10 +44,13 @@ Every meaningful run gets a short record under [`experiments/`](experiments/). A
 hypothesis, the exact change, fold scores, public score when submitted, and whether the change stays.
 Failed runs stay in the log.
 
+[`001-catboost-baseline`](experiments/001-catboost-baseline.md) was written before the baseline
+score is known.
+
 ## Data
 
-Competition data is not committed to this repository. Put Kaggle's files under `data/` locally;
-that directory is ignored by git.
+Competition data is not committed to this repository. `data/`, generated submissions, and model
+artifacts are ignored by git.
 
 Competition: [Predicting Electric Vehicle Purchases](https://www.kaggle.com/competitions/playground-series-s6e9)
 
@@ -49,4 +62,5 @@ leaderboard. A tiny gain that doubles complexity is not automatically a better m
 
 ## Status
 
-Baseline next. Results will replace this section once the first run is reproducible.
+Baseline code committed. CV and public leaderboard scores are still pending and will be filled in
+from the actual run, not estimated from somebody else's notebook.
