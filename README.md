@@ -15,23 +15,24 @@ CV and the leaderboard disagree, that disagreement is something to investigate r
 
 ## Current result
 
-The current candidate is a small LightGBM model on the raw competition features, with `id`
-excluded.
+The first submitted baseline scored **0.94168** publicly against **0.941759** OOF. That 0.000079
+gap is small enough that I am keeping the split fixed rather than rebuilding validation around the
+leaderboard.
+
+The current candidate changes the shape of the model rather than adding a pile of features:
+LightGBM gets a much larger numeric bin budget and each tree branch is restricted to one feature.
 
 | | AUC |
 | --- | ---: |
-| fold 1 | 0.940837 |
-| fold 2 | 0.942491 |
-| fold 3 | 0.941993 |
-| mean | **0.941773** |
-| OOF | **0.941759** |
+| fold 1 | 0.944489 |
+| fold 2 | 0.945581 |
+| fold 3 | 0.945444 |
+| mean | **0.945171** |
+| OOF | **0.945165** |
+| public | pending |
 
-Three folds fit in **48.6 seconds** in the run that produced these numbers. The fold spread is
-small, and reducing the trees from 31 leaves to 15 improved all three folds.
-
-The first CatBoost attempt is still in the history. It ran for four minutes without completing a
-fold in the environment I was using, which made it a bad control for fast iteration. I kept the
-code and the failed experiment rather than rewriting the story around the model that worked.
+That is **+0.003406 OOF** over the submitted baseline on exactly the same folds. No target encoding,
+external data, pseudo-labels, or public-score tuning is involved in this run.
 
 ## Run it
 
@@ -41,12 +42,17 @@ Put Kaggle's `train.csv`, `test.csv`, and `sample_submission.csv` under `data/`,
 python -m venv .venv
 # activate the environment for your shell
 pip install -r requirements.txt
+python scripts/train_highres_additive.py
+```
+
+For the original control instead:
+
+```bash
 python scripts/train_baseline.py
 ```
 
-The script checks the train/test columns and submission ids before fitting anything. It writes the
-fold scores to `results/lightgbm_baseline.json` and the averaged test predictions to
-`submissions/lightgbm_baseline.csv`.
+Both scripts check the train/test columns and submission ids before fitting anything. Generated
+submissions, metrics and model artifacts are ignored by git.
 
 ## Experiments
 
@@ -55,11 +61,11 @@ the log.
 
 - [`001 - CatBoost baseline`](experiments/001-catboost-baseline.md): stopped on runtime, no score
 - [`002 - LightGBM baseline`](experiments/002-lightgbm-baseline.md): 0.941684 mean CV
-- [`003 - smaller trees`](experiments/003-smaller-trees.md): 0.941773 mean CV, current candidate
+- [`003 - smaller trees`](experiments/003-smaller-trees.md): 0.941759 OOF, **0.94168 public**
+- [`004 - high-resolution additive`](experiments/004-high-resolution-additive.md): **0.945165 OOF**, current candidate
 
-I also tested a histogram gradient boosting model and simple blends. The best three-model OOF blend
-was only about 0.000054 above the current single model and the blend weights were chosen on those
-same OOF predictions, so I am not adding that complexity yet.
+The jump in 004 is large enough to treat as a real change. The next branch of work is fold-safe
+frequency and target encoding, but only after the unchanged 004 submission gets an external score.
 
 ## Data
 
@@ -73,7 +79,7 @@ Competition: [Predicting Electric Vehicle Purchases](https://www.kaggle.com/comp
 
 ## Status
 
-Local validation is measured. The next number that matters is the public Kaggle AUC from the current
-candidate; it stays `pending` in the experiment log until the file is actually submitted.
+One public score is recorded and tracks local validation closely. Experiment 004 is now the next
+submission candidate; its public AUC stays `pending` until Kaggle actually scores the file.
 
 MIT © James Kim
