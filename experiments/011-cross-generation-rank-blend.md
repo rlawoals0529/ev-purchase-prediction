@@ -19,11 +19,14 @@ No new target fit. This is a post-model rank ensemble of two already measured su
 Kaggle:
 XGBoost source: **0.94610** public
 High-resolution source: **0.94548** public
-80/20 blend: pending
+80/20 blend: **0.94615** public
 70/30 blend: pending
 
+What happened:
+The 80/20 blend improved the XGBoost source by **+0.00005**. That is a very small gain, so I am not treating it as evidence for a broad blend-weight search. It is only enough to justify the second weight that was fixed before seeing the result.
+
 Decision rule:
-Submit 80/20 first. If it improves the public score, test 70/30 as the second predetermined point. If 80/20 is flat or worse, do not keep searching blend weights against the public leaderboard.
+The first predetermined blend improved, so submit the already-prepared 70/30 point once. After that, stop searching blend weights against the public leaderboard regardless of whether it wins.
 
 Decision:
-pending
+keep the 80/20 result as the current public best. Test the one remaining predetermined 70/30 blend.
