@@ -26,10 +26,11 @@ rank blend is now the public best:
 | 010 | engineered LightGBM | 0.94607 |
 | 010 | engineered XGBoost | 0.94610 |
 | 011 | 80% XGBoost / 20% high-resolution rank blend | **0.94615** |
+| 011 | 70% XGBoost / 30% high-resolution rank blend | **0.94615** |
 
-The blend gain over XGBoost is only **+0.00005**. That is enough to keep the result, but not enough
-to justify searching arbitrary weights against the public leaderboard. Experiment 011 therefore has
-one remaining predetermined point, 70/30, and stops there.
+The first blend gained **+0.00005** over XGBoost. Moving another ten points of weight toward the
+older model left the displayed public score unchanged, so experiment 011 closes there rather than
+turning into a leaderboard weight sweep.
 
 ## Run it
 
@@ -66,13 +67,13 @@ the log.
 - [`008 - exact-value categories`](experiments/008-exact-value-categories.md): first fold regressed, stopped
 - [`009 - decimal digits`](experiments/009-decimal-digits.md): stopped on runtime
 - [`010 - two-model candidate sweep`](experiments/010-two-model-candidate-sweep.md): **0.94607 LGB / 0.94610 XGB public**
-- [`011 - cross-generation rank blend`](experiments/011-cross-generation-rank-blend.md): **0.94615 public** at 80/20
+- [`011 - cross-generation rank blend`](experiments/011-cross-generation-rank-blend.md): **0.94615 public** at both predetermined weights
 
 The important part of the sequence is that failed or slow feature ideas stay visible. Experiment
 010 did not replace that history with one giant final pipeline; it tested a larger feature set in a
 separate, measured branch and produced two independently scored submissions. Experiment 011 then
-used a less redundant older model for a small ensemble gain rather than blending two nearly identical
-rankings.
+used a less redundant older model for a small ensemble gain and stopped when the second fixed weight
+produced no further movement.
 
 ## Data
 
@@ -86,8 +87,8 @@ Competition: [Predicting Electric Vehicle Purchases](https://www.kaggle.com/comp
 
 ## Status
 
-**0.94615** is the current public best. The remaining point in experiment 011 is the already-fixed
-70% XGBoost / 30% high-resolution blend. After that result, the next improvement attempt should
-come from a genuinely different model or feature representation rather than more public weight search.
+**0.94615** is the current public best. Experiment 011 is closed. The next improvement attempt should
+come from a genuinely different learner or feature representation rather than more public blend-weight
+search.
 
 MIT © James Kim
