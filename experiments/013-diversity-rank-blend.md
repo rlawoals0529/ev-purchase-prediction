@@ -23,12 +23,15 @@ Measured test rank correlations before submission:
 - high-resolution vs TE-logit: 0.994719
 
 Kaggle:
-Current reference: **0.94615** public
+Previous reference: **0.94615** public
 Candidate file: `candidate_best_diversity_v1.csv`
-Public AUC: pending
+Public AUC: **0.94617**
+Delta: **+0.00002**
 
-Decision rule:
-Submit this exact blend once. If it does not improve the reference, do not tune nearby weights on the public leaderboard. The next change should add a genuinely different model family or feature representation.
+What happened:
+The fixed diversity blend improved the displayed public score by 0.00002. The gain is small, but it is consistent with the reason for the experiment: add a little non-tree ranking information without replacing the stronger tree predictions.
+
+One implementation detail matters for the next step. Rank averaging produced 4,811 exact ties across the 286,571 test rows. ROC AUC only cares about ordering, so those tied groups leave ranking information unused even though the component models can distinguish the rows.
 
 Decision:
-pending
+keep. 0.94617 becomes the current public reference. Do not search nearby blend weights. Test one deterministic tie-breaking refinement that preserves every non-tied ordering from this submission.
