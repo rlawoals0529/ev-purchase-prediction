@@ -12,24 +12,26 @@ and integer commute distance. Training encodings are produced by an inner split 
 its own target. Validation and test mappings are learned only from the outer training fold.
 
 Validation:
-Fold AUCs: pending
-Mean AUC: pending
-Std: pending
-OOF AUC: pending
-Runtime: pending
+Fold 1 AUC: 0.944028
+Experiment 004 fold 1: 0.944489
+Delta on fold 1: **-0.000461**
+Runtime: 25.0 seconds for the first fold
 
-Delta from 004:
-pending
+Full mean/std/OOF: not run
 
 Kaggle:
 Public AUC: not submitted
 
 What happened:
-Not run yet.
+The first held-out fold missed the reference by 0.000461, which is large relative to the gains I am
+willing to chase here. Since this experiment was required to improve consistently across folds, I
+stopped instead of spending two more folds to confirm a candidate that had already failed its first
+check.
 
 Decision:
-pending
+revert. Do not submit.
 
 Next:
-Run on the fixed folds. Submit only if the gain is consistent across folds and large enough to
-clear experiment 004 rather than fourth-decimal noise.
+Try representing repeated high-cardinality numeric values as categorical identities while keeping
+the raw numeric columns. That lets the model decide how to group exact values without hand-built
+target means.
