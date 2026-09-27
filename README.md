@@ -28,10 +28,12 @@ a fixed diversity-aware rank blend:
 | 011 | 80% XGBoost / 20% high-resolution rank blend | 0.94615 |
 | 011 | 70% XGBoost / 30% high-resolution rank blend | 0.94615 |
 | 013 | diversity rank blend | **0.94617** |
+| 014 | lexicographic tie-break | **0.94617** |
 
 Experiment 013 combines XGBoost, LightGBM, the older high-resolution additive model, and a small
-fold-safe target-encoding logistic branch. The gain is only **+0.00002** over 0.94615, so the weights
-stay fixed rather than becoming another public leaderboard search.
+fold-safe target-encoding logistic branch. Experiment 014 removed all 4,811 exact ties from that
+ranking without changing any already-ordered pair, but the displayed public score stayed unchanged.
+That closes both nearby blend-weight search and tie-breaking as useful next steps.
 
 ## Run it
 
@@ -71,12 +73,11 @@ the log.
 - [`011 - cross-generation rank blend`](experiments/011-cross-generation-rank-blend.md): **0.94615 public** at both predetermined weights
 - [`012 - CatBoost native`](experiments/012-catboost-native.md): prepared as a distinct-model branch, not yet measured
 - [`013 - diversity rank blend`](experiments/013-diversity-rank-blend.md): **0.94617 public**
-- [`014 - lexicographic tie break`](experiments/014-lexicographic-tie-break.md): pending
+- [`014 - lexicographic tie-break`](experiments/014-lexicographic-tiebreak.md): **0.94617 public**, no gain
 
-The important part of the sequence is that failed or slow ideas stay visible. Experiment 013 added
-a small amount of genuinely different ranking information and moved the score again. Experiment 014
-then changes only one thing: it resolves the 4,811 exact ties created by rank averaging while leaving
-every non-tied ordering unchanged.
+The important part of the sequence is that failed or slow ideas stay visible. The last two results
+also show the difference between a real new signal and leaderboard micro-tuning: adding a small
+diverse model moved the score; resolving rank ties did not.
 
 ## Data
 
@@ -90,7 +91,8 @@ Competition: [Predicting Electric Vehicle Purchases](https://www.kaggle.com/comp
 
 ## Status
 
-**0.94617** is the current public best. The next candidate is a one-shot lexicographic tie-break of
-that exact ranking, not another model-weight search.
+**0.94617** is the current public best. With the remaining submission budget limited, the next slot
+is reserved for a materially stronger external or independently validated ranking, not another local
+weight or tie experiment.
 
 MIT © James Kim
