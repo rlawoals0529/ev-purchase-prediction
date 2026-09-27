@@ -12,24 +12,28 @@ raw predictor, computed from the combined train/test feature values without usin
 original columns stay in the model.
 
 Validation:
-Fold AUCs: pending
-Mean AUC: pending
-Std: pending
-OOF AUC: pending
-Runtime: pending
+Fold AUCs: not completed
+Mean AUC: not completed
+Std: not completed
+OOF AUC: not completed
+Runtime: stopped after 180 seconds before completing the full run
 
 Delta from 004:
-pending
+not measured
 
 Kaggle:
 Public AUC: not submitted
 
 What happened:
-Not run yet. This record exists before seeing the result.
+Doubling the feature count while keeping the 16,384-bin additive model made the run too slow for the
+iteration loop I want here. I stopped it rather than changing settings mid-run and reporting a
+number from a different experiment.
 
 Decision:
-pending
+revert. The question is still useful, but adding frequency copies of every column is too expensive
+in this form.
 
 Next:
-Run on the fixed folds. Only submit if the gain is large enough to survive fold noise; otherwise
-leave it in the history and move to fold-safe target-derived features.
+Test only the two high-cardinality numeric columns, income and commute distance. Those are the
+places where repeated exact values can plausibly add information beyond the raw numeric split while
+keeping the model close to experiment 004 in size.
