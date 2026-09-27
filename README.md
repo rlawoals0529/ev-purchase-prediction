@@ -60,9 +60,15 @@ the log.
 - [`002 - LightGBM baseline`](experiments/002-lightgbm-baseline.md): 0.941684 mean CV
 - [`003 - smaller trees`](experiments/003-smaller-trees.md): 0.941759 OOF, **0.94168 public**
 - [`004 - high-resolution additive`](experiments/004-high-resolution-additive.md): **0.945165 OOF, 0.94548 public**
+- [`005 - frequency features`](experiments/005-frequency-features.md): stopped on runtime
+- [`006 - focused frequency`](experiments/006-focused-frequency.md): 0.945100 OOF, reverted
+- [`007 - cross-fit target buckets`](experiments/007-crossfit-target-buckets.md): first fold regressed, stopped
+- [`008 - exact-value categories`](experiments/008-exact-value-categories.md): first fold regressed, stopped
+- [`009 - decimal digits`](experiments/009-decimal-digits.md): stopped on runtime
 
-The next branch of work is fold-safe frequency and target-derived features. Those experiments keep
-the same split so a gain has to beat 0.945165 locally before it earns another submission.
+The important part of the sequence is that 004 survived both local validation and the public
+leaderboard, while the next several ideas did not clear the same local reference. I am leaving
+those misses visible instead of turning every attempted feature into part of the final pipeline.
 
 ## Data
 
@@ -76,7 +82,8 @@ Competition: [Predicting Electric Vehicle Purchases](https://www.kaggle.com/comp
 
 ## Status
 
-Two public submissions now track local validation closely. Experiment 004 is the measured reference
-for the next round rather than a leaderboard target to tune against.
+**0.94548** is the current public best. The validation setup has tracked both submitted scores
+closely, and none of experiments 005-009 earned another leaderboard submission. The EV track is
+stable enough to pause while the other competition repos get their first measured baselines.
 
 MIT © James Kim
