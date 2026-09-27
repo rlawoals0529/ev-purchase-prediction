@@ -15,24 +15,21 @@ CV and the leaderboard disagree, that disagreement is something to investigate r
 
 ## Current result
 
-The first submitted baseline scored **0.94168** publicly against **0.941759** OOF. That 0.000079
-gap is small enough that I am keeping the split fixed rather than rebuilding validation around the
-leaderboard.
+The first submitted baseline scored **0.94168** publicly against **0.941759** OOF. The
+high-resolution additive model then moved to **0.94548 public** against **0.945165 OOF**.
 
-The current candidate changes the shape of the model rather than adding a pile of features:
-LightGBM gets a much larger numeric bin budget and each tree branch is restricted to one feature.
+| experiment | OOF AUC | public AUC |
+| --- | ---: | ---: |
+| 003 - smaller trees | 0.941759 | 0.94168 |
+| 004 - high-resolution additive | **0.945165** | **0.94548** |
 
-| | AUC |
-| --- | ---: |
-| fold 1 | 0.944489 |
-| fold 2 | 0.945581 |
-| fold 3 | 0.945444 |
-| mean | **0.945171** |
-| OOF | **0.945165** |
-| public | pending |
+The second model improved OOF by **+0.003406** and the public score by **+0.00380**. Its public
+score is only 0.000315 above OOF, so I am keeping the validation split fixed rather than rebuilding
+it around leaderboard feedback.
 
-That is **+0.003406 OOF** over the submitted baseline on exactly the same folds. No target encoding,
-external data, pseudo-labels, or public-score tuning is involved in this run.
+Experiment 004 changes the shape of the model rather than adding a pile of features: LightGBM gets
+a much larger numeric bin budget and each tree branch is restricted to one feature. No target
+encoding, external data, pseudo-labels, or public-score tuning was used to get the 0.94548 result.
 
 ## Run it
 
@@ -62,10 +59,10 @@ the log.
 - [`001 - CatBoost baseline`](experiments/001-catboost-baseline.md): stopped on runtime, no score
 - [`002 - LightGBM baseline`](experiments/002-lightgbm-baseline.md): 0.941684 mean CV
 - [`003 - smaller trees`](experiments/003-smaller-trees.md): 0.941759 OOF, **0.94168 public**
-- [`004 - high-resolution additive`](experiments/004-high-resolution-additive.md): **0.945165 OOF**, current candidate
+- [`004 - high-resolution additive`](experiments/004-high-resolution-additive.md): **0.945165 OOF, 0.94548 public**
 
-The jump in 004 is large enough to treat as a real change. The next branch of work is fold-safe
-frequency and target encoding, but only after the unchanged 004 submission gets an external score.
+The next branch of work is fold-safe frequency and target-derived features. Those experiments keep
+the same split so a gain has to beat 0.945165 locally before it earns another submission.
 
 ## Data
 
@@ -79,7 +76,7 @@ Competition: [Predicting Electric Vehicle Purchases](https://www.kaggle.com/comp
 
 ## Status
 
-One public score is recorded and tracks local validation closely. Experiment 004 is now the next
-submission candidate; its public AUC stays `pending` until Kaggle actually scores the file.
+Two public submissions now track local validation closely. Experiment 004 is the measured reference
+for the next round rather than a leaderboard target to tune against.
 
 MIT © James Kim
