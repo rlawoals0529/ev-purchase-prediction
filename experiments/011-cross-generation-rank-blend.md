@@ -20,13 +20,13 @@ Kaggle:
 XGBoost source: **0.94610** public
 High-resolution source: **0.94548** public
 80/20 blend: **0.94615** public
-70/30 blend: pending
+70/30 blend: **0.94615** public
 
 What happened:
-The 80/20 blend improved the XGBoost source by **+0.00005**. That is a very small gain, so I am not treating it as evidence for a broad blend-weight search. It is only enough to justify the second weight that was fixed before seeing the result.
-
-Decision rule:
-The first predetermined blend improved, so submit the already-prepared 70/30 point once. After that, stop searching blend weights against the public leaderboard regardless of whether it wins.
+The 80/20 blend improved the XGBoost source by **+0.00005**. Moving another ten points of weight to the older model did not change the displayed public AUC at all. That is enough evidence to stop searching this blend axis rather than spending submissions on 75/25, 85/15, or other nearby weights.
 
 Decision:
-keep the 80/20 result as the current public best. Test the one remaining predetermined 70/30 blend.
+keep 0.94615 as the current public best. Close the weight search.
+
+Next:
+Use a genuinely different learner or representation so the next submission can add ranking diversity rather than reweighting the same two prediction sets.
