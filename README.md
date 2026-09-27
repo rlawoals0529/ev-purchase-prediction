@@ -16,18 +16,20 @@ If CV and the leaderboard disagree, that disagreement is something to investigat
 ## Current result
 
 The first submitted baseline scored **0.94168** publicly. The high-resolution additive model moved
-to **0.94548**, and the engineered two-model sweep pushed both independent candidates past it:
+to **0.94548**, the engineered sweep pushed both single models above 0.946, and a cross-generation
+rank blend is now the public best:
 
 | experiment | model | public AUC |
 | --- | --- | ---: |
 | 003 | small LightGBM baseline | 0.94168 |
 | 004 | high-resolution additive LightGBM | 0.94548 |
 | 010 | engineered LightGBM | 0.94607 |
-| 010 | engineered XGBoost | **0.94610** |
+| 010 | engineered XGBoost | 0.94610 |
+| 011 | 80% XGBoost / 20% high-resolution rank blend | **0.94615** |
 
-The latest gain is smaller than the jump from 003 to 004, but it replicated across two different
-tree implementations. XGBoost is ahead of LightGBM by only 0.00003, which is also a useful warning:
-the two engineered models are learning almost the same ranking.
+The blend gain over XGBoost is only **+0.00005**. That is enough to keep the result, but not enough
+to justify searching arbitrary weights against the public leaderboard. Experiment 011 therefore has
+one remaining predetermined point, 70/30, and stops there.
 
 ## Run it
 
@@ -64,10 +66,13 @@ the log.
 - [`008 - exact-value categories`](experiments/008-exact-value-categories.md): first fold regressed, stopped
 - [`009 - decimal digits`](experiments/009-decimal-digits.md): stopped on runtime
 - [`010 - two-model candidate sweep`](experiments/010-two-model-candidate-sweep.md): **0.94607 LGB / 0.94610 XGB public**
+- [`011 - cross-generation rank blend`](experiments/011-cross-generation-rank-blend.md): **0.94615 public** at 80/20
 
 The important part of the sequence is that failed or slow feature ideas stay visible. Experiment
 010 did not replace that history with one giant final pipeline; it tested a larger feature set in a
-separate, measured branch and produced two independently scored submissions.
+separate, measured branch and produced two independently scored submissions. Experiment 011 then
+used a less redundant older model for a small ensemble gain rather than blending two nearly identical
+rankings.
 
 ## Data
 
@@ -81,8 +86,8 @@ Competition: [Predicting Electric Vehicle Purchases](https://www.kaggle.com/comp
 
 ## Status
 
-**0.94610** is the current public best. The next experiment is not another LGB/XGB weight search:
-it is a cross-generation rank blend between the stronger engineered XGBoost model and the older
-high-resolution additive model, whose rankings are less redundant.
+**0.94615** is the current public best. The remaining point in experiment 011 is the already-fixed
+70% XGBoost / 30% high-resolution blend. After that result, the next improvement attempt should
+come from a genuinely different model or feature representation rather than more public weight search.
 
 MIT © James Kim
