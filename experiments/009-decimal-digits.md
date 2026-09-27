@@ -12,24 +12,26 @@ income units/tens/hundreds/thousands/ten-thousands and commute tenths/ones/tens.
 columns, folds, seed and model unchanged.
 
 Validation:
-Fold AUCs: pending
-Mean AUC: pending
-Std: pending
-OOF AUC: pending
-Runtime: pending
+Fold AUCs: not completed
+Mean AUC: not completed
+Std: not completed
+OOF AUC: not completed
+Runtime: stopped after 90 seconds before fold 1 completed
 
 Delta from 004:
-pending
+not measured
 
 Kaggle:
 Public AUC: not submitted
 
 What happened:
-Not run yet.
+The added digit block made the 16,384-bin additive model too slow for the current iteration loop.
+There was no held-out score before the 90-second stop, so there is no evidence to keep the change.
 
 Decision:
-pending
+revert for now. The idea may be worth revisiting with a cheaper model specifically for digit
+features, but not by making the current high-resolution model much larger.
 
 Next:
-Run fold 1 first. Continue only if it beats the 0.944489 reference rather than adding feature count
-for no measurable gain.
+Keep experiment 004 as the EV reference and spend the next iteration budget on a different
+competition rather than burning submissions or runtime on unvalidated variants.
