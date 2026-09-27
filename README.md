@@ -10,26 +10,24 @@ This is my entry for Kaggle's **Playground Series - Season 6, Episode 9**. The t
 **A change does not count as an improvement until it beats the same validation setup.**
 
 The public leaderboard is useful as a check, but I do not want to tune the project by chasing
-one public number. Every model and feature change goes through the same stratified folds first. If
-CV and the leaderboard disagree, that disagreement is something to investigate rather than hide.
+one public number. Every model and feature change goes through the same validation scheme first.
+If CV and the leaderboard disagree, that disagreement is something to investigate rather than hide.
 
 ## Current result
 
-The first submitted baseline scored **0.94168** publicly against **0.941759** OOF. The
-high-resolution additive model then moved to **0.94548 public** against **0.945165 OOF**.
+The first submitted baseline scored **0.94168** publicly. The high-resolution additive model moved
+to **0.94548**, and the engineered two-model sweep pushed both independent candidates past it:
 
-| experiment | OOF AUC | public AUC |
-| --- | ---: | ---: |
-| 003 - smaller trees | 0.941759 | 0.94168 |
-| 004 - high-resolution additive | **0.945165** | **0.94548** |
+| experiment | model | public AUC |
+| --- | --- | ---: |
+| 003 | small LightGBM baseline | 0.94168 |
+| 004 | high-resolution additive LightGBM | 0.94548 |
+| 010 | engineered LightGBM | 0.94607 |
+| 010 | engineered XGBoost | **0.94610** |
 
-The second model improved OOF by **+0.003406** and the public score by **+0.00380**. Its public
-score is only 0.000315 above OOF, so I am keeping the validation split fixed rather than rebuilding
-it around leaderboard feedback.
-
-Experiment 004 changes the shape of the model rather than adding a pile of features: LightGBM gets
-a much larger numeric bin budget and each tree branch is restricted to one feature. No target
-encoding, external data, pseudo-labels, or public-score tuning was used to get the 0.94548 result.
+The latest gain is smaller than the jump from 003 to 004, but it replicated across two different
+tree implementations. XGBoost is ahead of LightGBM by only 0.00003, which is also a useful warning:
+the two engineered models are learning almost the same ranking.
 
 ## Run it
 
@@ -48,8 +46,8 @@ For the original control instead:
 python scripts/train_baseline.py
 ```
 
-Both scripts check the train/test columns and submission ids before fitting anything. Generated
-submissions, metrics and model artifacts are ignored by git.
+The heavier engineered sweep is run as a Kaggle notebook rather than pretending it is a cheap
+local baseline. Generated submissions, metrics and model artifacts are ignored by git.
 
 ## Experiments
 
@@ -65,10 +63,11 @@ the log.
 - [`007 - cross-fit target buckets`](experiments/007-crossfit-target-buckets.md): first fold regressed, stopped
 - [`008 - exact-value categories`](experiments/008-exact-value-categories.md): first fold regressed, stopped
 - [`009 - decimal digits`](experiments/009-decimal-digits.md): stopped on runtime
+- [`010 - two-model candidate sweep`](experiments/010-two-model-candidate-sweep.md): **0.94607 LGB / 0.94610 XGB public**
 
-The important part of the sequence is that 004 survived both local validation and the public
-leaderboard, while the next several ideas did not clear the same local reference. I am leaving
-those misses visible instead of turning every attempted feature into part of the final pipeline.
+The important part of the sequence is that failed or slow feature ideas stay visible. Experiment
+010 did not replace that history with one giant final pipeline; it tested a larger feature set in a
+separate, measured branch and produced two independently scored submissions.
 
 ## Data
 
@@ -82,8 +81,8 @@ Competition: [Predicting Electric Vehicle Purchases](https://www.kaggle.com/comp
 
 ## Status
 
-**0.94548** is the current public best. The validation setup has tracked both submitted scores
-closely, and none of experiments 005-009 earned another leaderboard submission. The EV track is
-stable enough to pause while the other competition repos get their first measured baselines.
+**0.94610** is the current public best. The next experiment is not another LGB/XGB weight search:
+it is a cross-generation rank blend between the stronger engineered XGBoost model and the older
+high-resolution additive model, whose rankings are less redundant.
 
 MIT © James Kim
