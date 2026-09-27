@@ -16,8 +16,8 @@ If CV and the leaderboard disagree, that disagreement is something to investigat
 ## Current result
 
 The first submitted baseline scored **0.94168** publicly. The high-resolution additive model moved
-to **0.94548**, the engineered sweep pushed both single models above 0.946, and a cross-generation
-rank blend is now the public best:
+to **0.94548**, the engineered sweep pushed both single models above 0.946, and the current best is
+a fixed diversity-aware rank blend:
 
 | experiment | model | public AUC |
 | --- | --- | ---: |
@@ -25,12 +25,13 @@ rank blend is now the public best:
 | 004 | high-resolution additive LightGBM | 0.94548 |
 | 010 | engineered LightGBM | 0.94607 |
 | 010 | engineered XGBoost | 0.94610 |
-| 011 | 80% XGBoost / 20% high-resolution rank blend | **0.94615** |
-| 011 | 70% XGBoost / 30% high-resolution rank blend | **0.94615** |
+| 011 | 80% XGBoost / 20% high-resolution rank blend | 0.94615 |
+| 011 | 70% XGBoost / 30% high-resolution rank blend | 0.94615 |
+| 013 | diversity rank blend | **0.94617** |
 
-The first blend gained **+0.00005** over XGBoost. Moving another ten points of weight toward the
-older model left the displayed public score unchanged, so experiment 011 closes there rather than
-turning into a leaderboard weight sweep.
+Experiment 013 combines XGBoost, LightGBM, the older high-resolution additive model, and a small
+fold-safe target-encoding logistic branch. The gain is only **+0.00002** over 0.94615, so the weights
+stay fixed rather than becoming another public leaderboard search.
 
 ## Run it
 
@@ -68,12 +69,14 @@ the log.
 - [`009 - decimal digits`](experiments/009-decimal-digits.md): stopped on runtime
 - [`010 - two-model candidate sweep`](experiments/010-two-model-candidate-sweep.md): **0.94607 LGB / 0.94610 XGB public**
 - [`011 - cross-generation rank blend`](experiments/011-cross-generation-rank-blend.md): **0.94615 public** at both predetermined weights
+- [`012 - CatBoost native`](experiments/012-catboost-native.md): prepared as a distinct-model branch, not yet measured
+- [`013 - diversity rank blend`](experiments/013-diversity-rank-blend.md): **0.94617 public**
+- [`014 - lexicographic tie break`](experiments/014-lexicographic-tie-break.md): pending
 
-The important part of the sequence is that failed or slow feature ideas stay visible. Experiment
-010 did not replace that history with one giant final pipeline; it tested a larger feature set in a
-separate, measured branch and produced two independently scored submissions. Experiment 011 then
-used a less redundant older model for a small ensemble gain and stopped when the second fixed weight
-produced no further movement.
+The important part of the sequence is that failed or slow ideas stay visible. Experiment 013 added
+a small amount of genuinely different ranking information and moved the score again. Experiment 014
+then changes only one thing: it resolves the 4,811 exact ties created by rank averaging while leaving
+every non-tied ordering unchanged.
 
 ## Data
 
@@ -87,8 +90,7 @@ Competition: [Predicting Electric Vehicle Purchases](https://www.kaggle.com/comp
 
 ## Status
 
-**0.94615** is the current public best. Experiment 011 is closed. The next improvement attempt should
-come from a genuinely different learner or feature representation rather than more public blend-weight
-search.
+**0.94617** is the current public best. The next candidate is a one-shot lexicographic tie-break of
+that exact ranking, not another model-weight search.
 
 MIT © James Kim
