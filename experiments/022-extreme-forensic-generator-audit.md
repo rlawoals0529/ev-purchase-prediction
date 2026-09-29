@@ -31,6 +31,14 @@ The purity holds independently in every fold of the frozen 10-fold split. In tes
 
 Applying only these two rules to the independent probit score raises full-train AUC from **0.93769045** to **0.93778015**, delta **+0.00008970**.
 
+A second independent check was run on fold 0 with a plain shallow LightGBM using only the raw competition columns. The rules again helped:
+
+- base LightGBM fold-0 AUC: **0.94238977**
+- with only the two income hard edges: **0.94253257**
+- delta: **+0.00014280**
+
+Therefore the edge gain is not an artifact of the probit formula or of the source-allTE model. It transfers across structurally different rankers.
+
 A strong independent S6E9 pipeline also keeps exactly these two rules in its final post-processing. It measured additional candidate edges such as commute >= 83 km and a special 30k/no-subsidy cell as essentially neutral, so those extras are not promoted.
 
 ### Candidate
@@ -79,12 +87,14 @@ Recent Kaggle discussion reports:
 
 Those numbers imply there may still be honest signal above our local 0.94626-0.94629 regime, but no reproducible implementation for the 0.94652 XGB has been disclosed. We will not copy public prediction files.
 
+A lossguide / max-leaves / max-bin=1024 XGBoost architecture was screened on our stronger source-allTE representation. On this CPU it reached about **0.94367 fold-0 AUC after 250 rounds** and was still climbing when the execution window ended. This is not enough evidence to promote it and it is too expensive here for a blind full run.
+
 ## Decision
 
 **Promote** the two-rule hard-edge candidate as the next structurally justified submission.
 
 Continue research on:
-- generator-aware XGBoost variants (including lossguide / high max_bin / max_leaves);
+- generator-aware XGBoost variants when compute allows;
 - Jev-style gated experts rather than global blending;
 - source-label / original-data priors if they can be reconstructed reproducibly;
 - specialized corrections only where they improve frozen OOF or are fold-stable deterministic regions.
