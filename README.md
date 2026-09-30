@@ -1,8 +1,8 @@
 # EV Purchase Prediction
 
-Predicting whether someone will buy an EV, with every serious model change compared on aligned validation before it is promoted.
+My entry for Kaggle's **Playground Series - Season 6, Episode 9**. The task is to predict `Will_Buy_EV`, scored by ROC AUC.
 
-This is my entry for Kaggle's **Playground Series - Season 6, Episode 9**. The target is `Will_Buy_EV`, and submissions are scored by ROC AUC.
+I kept this repo as the experiment trail, not just the final submission. Model changes had to survive aligned validation before I treated them as improvements.
 
 ## Final result
 
@@ -22,11 +22,11 @@ The first submitted LightGBM baseline scored **0.94168** publicly. The final sou
 | tie-only multimodel reuse | k20 blend + multimodel tie-break | **0.94636** |
 | hard-edge stress test | k20 blend + deterministic edge rules | **0.94636** |
 
-The repeated **0.94636** result across fold count, blend weight, tie-breaking, and hard-edge post-processing is why I stopped treating nearby ranking changes as meaningful improvements.
+Several different fold counts, blend weights, tie-breakers, and hard-edge tweaks all came back at **0.94636**. At that point, moving the ranking around without a new signal stopped being useful.
 
 ## Approach
 
-The final model family combines three ideas:
+The final family came down to three things:
 
 1. **Generator-aware source support**
    - reconstructed target-free support from the verified `RandomState(101)` source process;
@@ -42,13 +42,13 @@ The final model family combines three ideas:
    - a high-resolution additive model retained because its ranking remained usefully different;
    - XGBoost and CatBoost were tested as aligned companion models, but their global public blend did not beat the final LightGBM-based family.
 
-The source-allTE validation result improved from **0.9462042 OOF with 10 folds** to about **0.9462612 OOF with 20 folds**. The public score did not visibly move beyond 0.94636, which is a useful example of why local validation and public leaderboard feedback both need to be interpreted carefully.
+Source-allTE moved from **0.9462042 OOF with 10 folds** to about **0.9462612 OOF with 20 folds**. The public score stayed at 0.94636. I kept both numbers because the small local gain did not translate into a visible leaderboard gain.
 
 ## Experiment rule
 
 **A change does not count as an improvement just because it looks clever or moves one public number.**
 
-The project uses frozen or aligned validation wherever possible. Failed, neutral, and slow experiments stay in the repository instead of being deleted after the final model is known.
+I used frozen or aligned validation wherever possible, and I left the failed, neutral, and slow experiments in the repo. Deleting them after seeing the final score would make the path look cleaner than it was.
 
 That includes rejected branches such as:
 
@@ -135,6 +135,6 @@ The current source-allTE script abbreviates target-encoding feature names with t
 
 **Final public best: 0.94636 ROC AUC.**
 
-The project is considered complete at this point. Another submission would need a genuinely new model family or a clearly validated new signal source rather than another nearby blend, tie-break, or post-processing variant.
+I am treating this run as finished. I would only reopen it for a genuinely different model family or a new signal that survives validation, not another nearby blend or post-processing tweak.
 
 MIT © James Kim
