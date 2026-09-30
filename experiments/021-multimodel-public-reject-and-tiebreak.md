@@ -2,11 +2,11 @@
 
 Date: 2026-09-29
 
-## Public result
+## Public results
 
 Submission `candidate_cb_bag3_multimodel_highres_rank_87p5_12p5_lex.csv` scored **0.94633** public.
 
-Current best remains **0.94636**, achieved by the source-allTE/high-res family (`candidate_source_k20_highres_rank_87p5_12p5_lex.csv` and `candidate_source_k20_highres_rank_90_10_lex.csv`).
+Current best remained **0.94636**, achieved by the source-allTE/high-res family (`candidate_source_k20_highres_rank_87p5_12p5_lex.csv` and `candidate_source_k20_highres_rank_90_10_lex.csv`).
 
 Decision: **reject global CatBoost/XGBoost weighting for public submissions**. Although the aligned OOF tree ensemble improved to ~0.9462906, that gain did not transfer to the public split.
 
@@ -24,8 +24,6 @@ For the 87.5/12.5 primary weighted rank:
 - maximum rank displacement: **3 positions**
 - Spearman correlation vs the current 0.94636 file: effectively 1.0 (**0.9999999999973**)
 
-This candidate therefore preserves every non-tied ordering decision from the current best and changes only ambiguous rows.
-
 Generated:
 
 - `candidate_source_k20_highres_87p5_12p5_multimodel_tiebreak.csv`
@@ -33,10 +31,18 @@ Generated:
 
 The existing 87.5/12.5 candidate was reconstructed exactly before swapping the tie-break key, confirming the transformation changes only tie ordering.
 
+## Tie-break public result
+
+`candidate_source_k20_highres_87p5_12p5_multimodel_tiebreak.csv` scored **0.94636** public, exactly matching the incumbent.
+
+The tie-only reuse therefore preserved the score but did not improve it. This closes the multimodel tie-break branch as public-rank-neutral at leaderboard precision.
+
 ## External methodology check
 
-Recent public Kaggle notebooks/discussions report that tiny improvements in this competition can come from tie-breaking / micro-blending rather than globally stronger models. These references were used for methodology only; no third-party predictions were imported.
+Recent public Kaggle notebooks/discussions were used for methodology only; no third-party prediction files were imported. Every submitted prediction in this project comes from our own trained models or deterministic combinations of those predictions.
 
 ## Decision
 
-Submit the 87.5/12.5 multimodel tie-break variant before any further global CatBoost/XGBoost blend. It is the minimum-change test from the current 0.94636 best.
+- Reject global CatBoost/XGBoost weighting for the final submission family.
+- Treat multimodel tie-breaking as neutral rather than an improvement.
+- Keep the k20 source-allTE/high-resolution rank blend as the public-best core.
